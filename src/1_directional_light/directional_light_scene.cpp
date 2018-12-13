@@ -17,26 +17,20 @@
 
 void DirectionalLightScene::Initialize() {
 
-	texShader = new Shader();
-	texShader->attach("assets/shaders/texture.vert", GL_VERTEX_SHADER);
-	texShader->attach("assets/shaders/texture.frag", GL_FRAGMENT_SHADER);
-	texShader->link();
+	shader = new Shader();
+	shader->attach("assets/shaders/phong/single light/directional.vert", GL_VERTEX_SHADER);
+	shader->attach("assets/shaders/phong/single light/directional.frag", GL_FRAGMENT_SHADER);
+	shader->link();
 
-    shader = new Shader();
-    shader->attach("assets/shaders/phong/single light/directional.vert", GL_VERTEX_SHADER);
-    shader->attach("assets/shaders/phong/single light/directional.frag", GL_FRAGMENT_SHADER);
-    shader->link();
+	mLoc = glGetUniformLocation(shader->getID(), "M");
+	mitLoc = glGetUniformLocation(shader->getID(), "M_it");
+	camPosLoc = glGetUniformLocation(shader->getID(), "cam_pos");
 
+	texLoc = glGetUniformLocation(shader->getID(), "tex");
+	vLoc = glGetUniformLocation(shader->getID(), "vView");
+	pLoc = glGetUniformLocation(shader->getID(), "Proj");
+	scLoc = glGetUniformLocation(shader->getID(), "skyColour");
 
-    mLoc = glGetUniformLocation(shader->getID(), "M");
-    mitLoc = glGetUniformLocation(shader->getID(), "M_it");
-    vpLoc = glGetUniformLocation(shader->getID(), "VP");
-    camPosLoc = glGetUniformLocation(shader->getID(), "cam_pos");
-
-	texLoc = glGetUniformLocation(texShader->getID(), "tex");
-	mvpLoc = glGetUniformLocation(texShader->getID(), "MVP");
-
-    materialVars.diffuse = glGetUniformLocation(shader->getID(), "material.diffuse");
     materialVars.specular = glGetUniformLocation(shader->getID(), "material.specular");
     materialVars.ambient = glGetUniformLocation(shader->getID(), "material.ambient");
     materialVars.shininess = glGetUniformLocation(shader->getID(), "material.shininess");
@@ -45,9 +39,6 @@ void DirectionalLightScene::Initialize() {
     lightVars.specular = glGetUniformLocation(shader->getID(), "light.specular");
     lightVars.ambient = glGetUniformLocation(shader->getID(), "light.ambient");
     lightVars.direction = glGetUniformLocation(shader->getID(), "light.direction");
-    
-    //plane = MeshUtils::Plane({0,0}, {10,10});
-    //model = MeshUtils::Sphere(48, 32);
 
 	car = MeshUtils::LoadObj("assets/models/Cars/lightning-mcqueen-cars-2.obj");
 	carTex = TextureUtils::Load2DTextureFromFile("assets/textures/light1_l0.png");
@@ -82,7 +73,7 @@ void DirectionalLightScene::Initialize() {
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glClearColor(0,0.8f,1,0.0f);
+	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 }
 
 void DirectionalLightScene::Update(double delta_time) {
@@ -143,17 +134,24 @@ void DirectionalLightScene::Update(double delta_time) {
 void DirectionalLightScene::Draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clear colors and depth
 
-    glm::mat4 VP = camera->getVPMatrix();
+	glm::mat4 V = camera->getViewMatrix();
+	glm::mat4 P = camera->getProjectionMatrix();
     glm::vec3 cam_pos = camera->getPosition();
     glm::vec3 light_dir = -(glm::vec3(glm::cos(lightYaw), 0, glm::sin(lightYaw)) * glm::cos(lightPitch) + glm::vec3(0, glm::sin(lightPitch), 0));
 
     shader->use();
-    glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(VP));
+	glUniformMatrix4fv(vLoc, 1, GL_FALSE, glm::value_ptr(V));
+	glUniformMatrix4fv(pLoc, 1, GL_FALSE, glm::value_ptr(P));
+	glUniform3f(scLoc, 0.5f, 0.5f, 0.5f);
     glUniform3f(camPosLoc, cam_pos.x, cam_pos.y, cam_pos.z);
     glUniform3f(lightVars.diffuse, 0.9f, 0.8f, 0.6f);
     glUniform3f(lightVars.specular, 0.9f, 0.8f, 0.6f);
     glUniform3f(lightVars.ambient, 0.88f, 0.68f, 0.15f);
     glUniform3f(lightVars.direction, light_dir.x, light_dir.y, light_dir.z);
+
+	glUniform3f(materialVars.specular, 0.2f, 0.2f, 0.2f);
+	glUniform3f(materialVars.ambient, 0.5f, 0.6f, 0.5f);
+	glUniform1f(materialVars.shininess, 50);
 
     /*glm::mat4 ground_mat = glm::scale(glm::mat4(), glm::vec3(100, 1, 100));
     glm::mat4 ground_mat_it = glm::transpose(glm::inverse(ground_mat));
@@ -180,13 +178,13 @@ void DirectionalLightScene::Draw() {
             model->draw();
         }
     }*/
-
-	texShader->use();
 	carTex->bind();
 	glm::mat4 tree_mat = glm::translate(glm::mat4(), { CarPosition.x ,1 ,CarPosition.z })
 						*glm::rotate(glm::mat4(), -CarRotation, glm::vec3(0, 1, 0))
 						*glm::translate(glm::mat4(), { 0,-1,0 })*glm::scale(glm::mat4(), { 1, 1, 1 });
-	glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(VP * tree_mat));
+	glm::mat4 tree_mat_it = glm::transpose(glm::inverse(tree_mat));
+	glUniformMatrix4fv(mLoc, 1, GL_FALSE, glm::value_ptr(tree_mat));
+	glUniformMatrix4fv(mitLoc, 1, GL_FALSE, glm::value_ptr(tree_mat_it));
 	car->draw();
 
 	
@@ -196,7 +194,9 @@ void DirectionalLightScene::Draw() {
 		glm::scale(glm::mat4(), glm::vec3(0.05f, 0.05f, 0.05f));
 	for (int i = 0; i <= 20; i++) {
 		tree_mat = glm::translate(glm::mat4(), { 0, -0.4f, 15 * i + roadPos }) * temp;
-		glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(VP * tree_mat));
+		glm::mat4 tree_mat_it = glm::transpose(glm::inverse(tree_mat));
+		glUniformMatrix4fv(mLoc, 1, GL_FALSE, glm::value_ptr(tree_mat));
+		glUniformMatrix4fv(mitLoc, 1, GL_FALSE, glm::value_ptr(tree_mat_it));
 		road->draw();
 	}
 }
@@ -204,10 +204,10 @@ void DirectionalLightScene::Draw() {
 void DirectionalLightScene::Finalize() {
     delete controller;
     delete camera;
-    delete model;
-    delete plane;
+    //delete model;
+    //delete plane;
     delete shader;
-	delete texShader;
+	//delete texShader;
 	delete road;
 	delete roadTex;
 	delete carTex;

@@ -13,7 +13,7 @@
 
 class DirectionalLightScene : public Scene {
 private:
-    Shader* shader, * texShader;
+	Shader* shader; //,* texShader;
     Mesh* plane, *model, *car, *road;
     Camera* camera;
     FlyCameraController* controller;
@@ -25,7 +25,7 @@ private:
 	float CarRotation;
 	int roadPos;
 
-    GLuint mLoc, mitLoc, vpLoc, camPosLoc, texLoc, mvpLoc;
+	GLuint mLoc, vLoc, pLoc, mitLoc, camPosLoc, texLoc, scLoc;// mvpLoc,vpLoc
     struct {
         GLuint diffuse, specular, ambient, shininess;
     } materialVars;
