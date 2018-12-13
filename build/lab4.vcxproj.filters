@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\1_directional_light\directional_light_scene.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\2_point_light\point_light_scene.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\3_spot_light\spot_light_scene.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\4_multiple_lights\multiple_lights_scene.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\5_multipass_lights\multipass_lights_scene.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\main.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\mesh\mesh_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\textures\texture_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\vendor\glad\src\glad.c">
+      <Filter>vendors</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\1_directional_light\directional_light_scene.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\2_point_light\point_light_scene.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\3_spot_light\spot_light_scene.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\4_multiple_lights\multiple_lights_scene.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\src\5_multipass_lights\multipass_lights_scene.hpp">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\application.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\camera\camera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\camera\controllers\fly_camera_controller.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\camera\controllers\orbit_camera_controller.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\input\keyboard.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\input\mouse.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\mesh\mesh.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\mesh\mesh_utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\mesh\vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\mesh\vertex_attribute_pointer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\scene.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\textures\texture2d.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\textures\texture_cube.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\common\textures\texture_utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\Engineering\Computer Engineering\CMP-Second Year\Graphics\Labs\Lab4\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{671E8353-225E-3D92-9F38-1305044A9745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{F5870299-CC4F-32FA-87E3-EF3F4E09C0F6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{F25853CC-9CFC-381D-B661-9CE5FF9098FB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources">
+      <UniqueIdentifier>{E8233A2C-8ADE-3B8B-AE4F-53F4CB4CDA42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendors">
+      <UniqueIdentifier>{2E688F13-71AB-3235-97CA-B89AA25F9B05}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
