@@ -82,17 +82,42 @@ void DirectionalLightScene::Initialize() {
     glBlendEquation(GL_FUNC_ADD);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glClearColor(0.88f,0.68f,0.15f,0.0f);
+    glClearColor(0,0.8f,1,0.0f);
 }
 
 void DirectionalLightScene::Update(double delta_time) {
     controller->update(delta_time);
-	controller->setPosition({ camera->getPosition().r, camera->getPosition().g, camera->getPosition().b + (float)delta_time * 5 });
-	CarPosition.z += (float)delta_time * 5;
 	Keyboard* kb = getKeyboard();
-	if (kb->isPressed(GLFW_KEY_KP_6)) CarPosition.x -= (float)delta_time * 8;
-	if (kb->isPressed(GLFW_KEY_KP_4)) CarPosition.x += (float)delta_time * 8;
-    /*Keyboard* kb = getKeyboard();
+	float angle = 0.4 * glm::quarter_pi<float>();
+	float distance = (float)delta_time * 7;
+	if (CarRotation != 0) {
+		distance -= (float)delta_time * 1;
+	}
+	if (CarPosition.z > 15) {
+		distance -= 15;
+	}
+	CarPosition.z += distance;
+	controller->setPosition({ camera->getPosition().r, camera->getPosition().g, camera->getPosition().b + distance});
+	controller->update(delta_time);
+	if (kb->isPressed(GLFW_KEY_KP_6) && CarPosition.x >= -14) { 
+		CarPosition.x -= (float)delta_time * 8;
+		CarRotation = CarRotation + (float)delta_time * 4;
+		CarRotation = (CarRotation > angle) ? angle : CarRotation;
+	}
+	else if (CarRotation > 0) {
+		CarRotation = CarRotation - (float)delta_time * 4;
+		CarRotation = (CarRotation < 0) ? 0 : CarRotation;
+	}
+	if (kb->isPressed(GLFW_KEY_KP_4) && CarPosition.x <= 14) {
+		CarPosition.x += (float)delta_time * 8;
+		CarRotation = CarRotation - (float)delta_time * 4;
+		CarRotation = (CarRotation < -angle) ? -angle : CarRotation;
+	}
+	else if (CarRotation < 0) {
+		CarRotation = CarRotation + (float)delta_time * 4;
+		CarRotation = (CarRotation > 0) ? 0 : CarRotation;
+	}
+    //Keyboard* kb = getKeyboard();
 
     float pitch_speed = 1.0f, yaw_speed = 1.0f;
 
@@ -105,7 +130,7 @@ void DirectionalLightScene::Update(double delta_time) {
     if(lightPitch > glm::half_pi<float>()) lightPitch = glm::half_pi<float>();
     lightYaw = glm::wrapAngle(lightYaw);
 
-	if (kb->isPressed(GLFW_KEY_KP_8)) CarPosition.z += (float)delta_time * 5;
+	/*if (kb->isPressed(GLFW_KEY_KP_8)) CarPosition.z += (float)delta_time * 5;
 	if (kb->isPressed(GLFW_KEY_KP_5)) CarPosition.z -= (float)delta_time * 5;
 	if (kb->isPressed(GLFW_KEY_KP_6)) CarPosition.x -= (float)delta_time * 5;
 	if (kb->isPressed(GLFW_KEY_KP_4)) CarPosition.x += (float)delta_time * 5;
@@ -169,12 +194,11 @@ void DirectionalLightScene::Draw() {
 	glm::mat4 temp = glm::rotate(glm::mat4(), (float)glm::radians(-90.0f), { 1,0,0 })*
 		glm::rotate(glm::mat4(), (float)glm::radians(-90.0f), { 0,0,1 })*
 		glm::scale(glm::mat4(), glm::vec3(0.05f, 0.05f, 0.05f));
-	for (int i = 0; i <= 10; i++) {
-		tree_mat = glm::translate(glm::mat4(), { 0, -0.4f, 15 * i }) * temp;
+	for (int i = 0; i <= 20; i++) {
+		tree_mat = glm::translate(glm::mat4(), { 0, -0.4f, 15 * i + roadPos }) * temp;
 		glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(VP * tree_mat));
 		road->draw();
 	}
-
 }
 
 void DirectionalLightScene::Finalize() {

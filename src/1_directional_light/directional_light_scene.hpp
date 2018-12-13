@@ -23,6 +23,7 @@ private:
 
 	glm::vec3 CarPosition;
 	float CarRotation;
+	int roadPos;
 
     GLuint mLoc, mitLoc, vpLoc, camPosLoc, texLoc, mvpLoc;
     struct {
@@ -32,7 +33,7 @@ private:
         GLuint diffuse, specular, ambient, direction;
     } lightVars;
 public:
-	DirectionalLightScene(Application* app) : Scene(app) { CarRotation = 0; }
+	DirectionalLightScene(Application* app) : Scene(app) { CarRotation = 0; roadPos = 0; }
 
     void Initialize() override;
     void Update(double delta_time) override;

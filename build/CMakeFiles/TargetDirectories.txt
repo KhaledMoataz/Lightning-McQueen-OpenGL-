@@ -1,4 +1,0 @@
-D:/Engineering/Computer Engineering/CMP-Second Year/Graphics/Labs/Lab4/build/CMakeFiles/lab4.dir
-D:/Engineering/Computer Engineering/CMP-Second Year/Graphics/Labs/Lab4/build/CMakeFiles/ALL_BUILD.dir
-D:/Engineering/Computer Engineering/CMP-Second Year/Graphics/Labs/Lab4/build/vendor/glfw/CMakeFiles/ALL_BUILD.dir
-D:/Engineering/Computer Engineering/CMP-Second Year/Graphics/Labs/Lab4/build/vendor/glfw/src/CMakeFiles/glfw.dir

@@ -26,7 +26,7 @@ Application::Application(const char* title, int width, int height, bool isFullsc
     glfwWindowHint(GLFW_SAMPLES, 16);
 
     //Enable Double Buffering
-    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
     //Set the bit-depths of the frame buffer
     glfwWindowHint(GLFW_RED_BITS, 8);
