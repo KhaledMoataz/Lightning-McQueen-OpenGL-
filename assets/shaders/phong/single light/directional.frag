@@ -26,6 +26,7 @@ in vec2 vUV;
 in float visibility;
 uniform vec3 skyColour;
 uniform sampler2D tex;
+uniform mat4 trans;
 
 float diffuse(vec3 n, vec3 l){
     //Diffuse (Lambert) term computation: reflected light = cosine the light incidence angle on the surface
@@ -45,9 +46,9 @@ void main()
 
 	vec4 texcolor = texture(tex, vUV);
 
-    color = vec4(
-        material.ambient*light.ambient + 
-        texcolor.xyz*light.diffuse*diffuse(n, -light.direction) + 
+    color = trans * vec4(
+        material.ambient*light.ambient +
+        texcolor.xyz*light.diffuse*diffuse(n, -light.direction) +
         material.specular*light.specular*specular(n, -light.direction, v, material.shininess),
         1.0f
     );

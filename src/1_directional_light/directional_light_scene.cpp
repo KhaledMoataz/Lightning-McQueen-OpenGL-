@@ -16,7 +16,12 @@
 */
 
 void DirectionalLightScene::Initialize() {
-
+	trans = glm::mat4(
+		0.393f, 0.769f, 0.189f, 0,
+		0.349f, 0.686f, 0.168f, 0,
+		0.272f, 0.534f, 0.131f, 0,
+		0, 0, 0, 1);
+	trans = glm::transpose(trans);
 	shader = new Shader();
 	shader->attach("assets/shaders/phong/single light/directional.vert", GL_VERTEX_SHADER);
 	shader->attach("assets/shaders/phong/single light/directional.frag", GL_FRAGMENT_SHADER);
@@ -30,6 +35,7 @@ void DirectionalLightScene::Initialize() {
 	vLoc = glGetUniformLocation(shader->getID(), "vView");
 	pLoc = glGetUniformLocation(shader->getID(), "Proj");
 	scLoc = glGetUniformLocation(shader->getID(), "skyColour");
+	transLoc = glGetUniformLocation(shader->getID(), "trans");
 
     materialVars.specular = glGetUniformLocation(shader->getID(), "material.specular");
     materialVars.ambient = glGetUniformLocation(shader->getID(), "material.ambient");
@@ -42,6 +48,11 @@ void DirectionalLightScene::Initialize() {
 
 	car = MeshUtils::LoadObj("assets/models/Cars/lightning-mcqueen-cars-2.obj");
 	carTex = TextureUtils::Load2DTextureFromFile("assets/textures/light1_l0.png");
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	coin = MeshUtils::LoadObj("assets/models/Coin/coin.obj");
+	coinTex = TextureUtils::Load2DTextureFromFile("assets/models/Coin/coin-texture1.jpg");
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -77,20 +88,35 @@ void DirectionalLightScene::Initialize() {
 }
 
 void DirectionalLightScene::Update(double delta_time) {
+	time += delta_time;
     controller->update(delta_time);
 	Keyboard* kb = getKeyboard();
 	float angle = 0.4 * glm::quarter_pi<float>();
-	float distance = (float)delta_time * 7;
+	float distance = (float)delta_time * 10;
 	if (CarRotation != 0) {
 		distance -= (float)delta_time * 1;
 	}
-	if (CarPosition.z > 15) {
+	if (CarPosition.z > 75) {
 		distance -= 15;
+		for (int i = 0; i < coinPositions.size(); i++) {
+			glm::vec3 position = coinPositions.front();
+			coinPositions.pop();
+			position.z -= 15;
+			coinPositions.push(position);
+		}
 	}
 	CarPosition.z += distance;
 	controller->setPosition({ camera->getPosition().r, camera->getPosition().g, camera->getPosition().b + distance});
 	controller->update(delta_time);
-	if (kb->isPressed(GLFW_KEY_KP_6) && CarPosition.x >= -14) { 
+	if ((int)time % 1 == 0 && second != (int)time) {
+		lastPosition += 50;
+		coinPositions.push(glm::vec3(rand() % 29 - 14, 2, lastPosition));
+		second = (int)time;
+	}
+	if (kb->justPressed(GLFW_KEY_T)) {
+		colorTransformation = !colorTransformation;
+	}
+	if (kb->isPressed(GLFW_KEY_RIGHT) && CarPosition.x >= -14) {
 		CarPosition.x -= (float)delta_time * 8;
 		CarRotation = CarRotation + (float)delta_time * 4;
 		CarRotation = (CarRotation > angle) ? angle : CarRotation;
@@ -99,7 +125,7 @@ void DirectionalLightScene::Update(double delta_time) {
 		CarRotation = CarRotation - (float)delta_time * 4;
 		CarRotation = (CarRotation < 0) ? 0 : CarRotation;
 	}
-	if (kb->isPressed(GLFW_KEY_KP_4) && CarPosition.x <= 14) {
+	if (kb->isPressed(GLFW_KEY_LEFT) && CarPosition.x <= 14) {
 		CarPosition.x += (float)delta_time * 8;
 		CarRotation = CarRotation - (float)delta_time * 4;
 		CarRotation = (CarRotation < -angle) ? -angle : CarRotation;
@@ -140,6 +166,10 @@ void DirectionalLightScene::Draw() {
     glm::vec3 light_dir = -(glm::vec3(glm::cos(lightYaw), 0, glm::sin(lightYaw)) * glm::cos(lightPitch) + glm::vec3(0, glm::sin(lightPitch), 0));
 
     shader->use();
+	if(colorTransformation)
+		glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(trans));
+	else
+		glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(glm::mat4()));
 	glUniformMatrix4fv(vLoc, 1, GL_FALSE, glm::value_ptr(V));
 	glUniformMatrix4fv(pLoc, 1, GL_FALSE, glm::value_ptr(P));
 	glUniform3f(scLoc, 0.5f, 0.5f, 0.5f);
@@ -187,6 +217,26 @@ void DirectionalLightScene::Draw() {
 	glUniformMatrix4fv(mitLoc, 1, GL_FALSE, glm::value_ptr(tree_mat_it));
 	car->draw();
 
+	coinTex->bind();
+	int size = coinPositions.size();
+	for (int i = 0; i < size; i++) {
+		glm::vec3 position = coinPositions.front();
+		coinPositions.pop();
+		if (glm::distance(CarPosition, position) < 4) {
+			continue;
+		}
+		glm::mat4 coinMat = glm::translate(glm::mat4(), { position })
+			*glm::rotate(glm::mat4(), (float)glm::radians(90 * time), glm::vec3(0, 1, 0))
+			*glm::rotate(glm::mat4(), (float)glm::radians(90.0f), glm::vec3(1, 0, 0))
+			*glm::scale(glm::mat4(), { 1.5f, 1.5f, 1.5f });
+		glUniformMatrix4fv(mLoc, 1, GL_FALSE, glm::value_ptr(coinMat));
+		glUniformMatrix4fv(mitLoc, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(coinMat))));
+		coin->draw();
+		if (position.z < -10) {
+			continue;
+		}
+		coinPositions.push(position);
+	}
 	
 	roadTex->bind();
 	glm::mat4 temp = glm::rotate(glm::mat4(), (float)glm::radians(-90.0f), { 1,0,0 })*

@@ -10,22 +10,29 @@
 #include <textures/texture2d.hpp>
 #include <camera/camera.hpp>
 #include <camera/controllers/fly_camera_controller.hpp>
+#include <queue>
 
 class DirectionalLightScene : public Scene {
 private:
+	glm::mat4 trans;
 	Shader* shader; //,* texShader;
-    Mesh* plane, *model, *car, *road;
+    Mesh* plane, *model, *car, *road, *coin;
     Camera* camera;
     FlyCameraController* controller;
-	Texture2D *carTex, *roadTex;
+	Texture2D *carTex, *roadTex, *coinTex;
 
     float lightYaw, lightPitch;
 
 	glm::vec3 CarPosition;
 	float CarRotation;
 	int roadPos;
+	std::queue<glm::vec3> coinPositions;
+	float time = 0;
+	int second = 0;
+	float lastPosition = 0;
+	bool colorTransformation = false;
 
-	GLuint mLoc, vLoc, pLoc, mitLoc, camPosLoc, texLoc, scLoc;// mvpLoc,vpLoc
+	GLuint mLoc, vLoc, pLoc, mitLoc, camPosLoc, texLoc, scLoc, transLoc;// mvpLoc,vpLoc
     struct {
         GLuint diffuse, specular, ambient, shininess;
     } materialVars;
