@@ -96,7 +96,7 @@ void DirectionalLightScene::Update(double delta_time) {
 	if (CarRotation != 0) {
 		distance -= (float)delta_time * 1;
 	}
-	if (CarPosition.z > 75) {
+	if (CarPosition.z > 15) {
 		distance -= 15;
 		for (int i = 0; i < coinPositions.size(); i++) {
 			glm::vec3 position = coinPositions.front();
@@ -225,7 +225,8 @@ void DirectionalLightScene::Draw() {
 		if (glm::distance(CarPosition, position) < 4) {
 			continue;
 		}
-		glm::mat4 coinMat = glm::translate(glm::mat4(), { position })
+		// position + glm::vec3(glm::sin(glm::radians(720 * time + 10 * position.x)), 1 + glm::sin(glm::radians(360 * time + 10 * position.x)), 0)})
+		glm::mat4 coinMat = glm::translate(glm::mat4(), { position + glm::vec3(0, 1 + glm::sin(glm::radians(360 * time + 10 * position.x)), 0)})
 			*glm::rotate(glm::mat4(), (float)glm::radians(90 * time), glm::vec3(0, 1, 0))
 			*glm::rotate(glm::mat4(), (float)glm::radians(90.0f), glm::vec3(1, 0, 0))
 			*glm::scale(glm::mat4(), { 1.5f, 1.5f, 1.5f });
