@@ -96,14 +96,8 @@ void DirectionalLightScene::Update(double delta_time) {
 	if (CarRotation != 0) {
 		distance -= (float)delta_time * 1;
 	}
-	if (CarPosition.z > 15) {
-		distance -= 15;
-		for (int i = 0; i < coinPositions.size(); i++) {
-			glm::vec3 position = coinPositions.front();
-			coinPositions.pop();
-			position.z -= 15;
-			coinPositions.push(position);
-		}
+	if (CarPosition.z > (startRoad + 1) * 15) {
+		startRoad++; // This is much better than -15
 	}
 	CarPosition.z += distance;
 	controller->setPosition({ camera->getPosition().r, camera->getPosition().g, camera->getPosition().b + distance});
@@ -233,7 +227,7 @@ void DirectionalLightScene::Draw() {
 		glUniformMatrix4fv(mLoc, 1, GL_FALSE, glm::value_ptr(coinMat));
 		glUniformMatrix4fv(mitLoc, 1, GL_FALSE, glm::value_ptr(glm::transpose(glm::inverse(coinMat))));
 		coin->draw();
-		if (position.z < -10) {
+		if (position.z < CarPosition.z - 10) { // Change condition we are not subtracting 15
 			continue;
 		}
 		coinPositions.push(position);
@@ -243,7 +237,7 @@ void DirectionalLightScene::Draw() {
 	glm::mat4 temp = glm::rotate(glm::mat4(), (float)glm::radians(-90.0f), { 1,0,0 })*
 		glm::rotate(glm::mat4(), (float)glm::radians(-90.0f), { 0,0,1 })*
 		glm::scale(glm::mat4(), glm::vec3(0.05f, 0.05f, 0.05f));
-	for (int i = 0; i <= 20; i++) {
+	for (int i = startRoad; i <= startRoad + 20; i++) {
 		tree_mat = glm::translate(glm::mat4(), { 0, -0.4f, 15 * i + roadPos }) * temp;
 		glm::mat4 tree_mat_it = glm::transpose(glm::inverse(tree_mat));
 		glUniformMatrix4fv(mLoc, 1, GL_FALSE, glm::value_ptr(tree_mat));

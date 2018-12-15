@@ -31,6 +31,7 @@ private:
 	int second = 0;
 	float lastPosition = 0;
 	bool colorTransformation = false;
+	int startRoad = 0;
 
 	GLuint mLoc, vLoc, pLoc, mitLoc, camPosLoc, texLoc, scLoc, transLoc;// mvpLoc,vpLoc
     struct {
